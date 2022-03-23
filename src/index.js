@@ -1,6 +1,6 @@
 import {initializeApp} from 'firebase/app'
 import {
-    getFirestore,collection,getDocs,addDoc,deleteDoc,doc
+    getFirestore,collection,getDocs,addDoc,deleteDoc,doc,onSnapshot
 }from 'firebase/firestore'
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -24,7 +24,7 @@ const firebaseConfig = {
   const colRef=collection(db,'books')
 
   //get the collection data 
-  getDocs(colRef)
+  /* getDocs(colRef)
   .then((snapshot) => {
      let books=[];
      snapshot.docs.forEach((doc) => {
@@ -34,7 +34,18 @@ const firebaseConfig = {
   })
   .catch(err => {
       console.log(err)
-  })
+  }) */
+
+
+  //real time collection data
+onSnapshot(colRef, (snapshot) => {
+    let books=[];
+    snapshot.docs.forEach((doc) => {
+        books.push({...doc.data(), id: doc.id})
+    })
+    console.log(books)
+})
+
 
   //adding to the collection //addDoc
   const addBookForm=document.querySelector('.add')
