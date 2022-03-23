@@ -1,6 +1,7 @@
 import {initializeApp} from 'firebase/app'
 import {
-    getFirestore,collection,getDocs,addDoc,deleteDoc,doc,onSnapshot
+    getFirestore,collection,getDocs,addDoc,deleteDoc,doc,onSnapshot,query,where,
+    orderBy,serverTimestamp,getDoc
 }from 'firebase/firestore'
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -50,18 +51,19 @@ onSnapshot(colRef, (snapshot) => {
   //adding to the collection //addDoc
   const addBookForm=document.querySelector('.add')
     addBookForm.addEventListener('click', (e) => {
-	let bookname = "New book title";
+	let bookname = "fgfgwe rfjwebfrw erf wrfhj";
     let author = "Lawal";
 	addDoc(colRef, {
 		book_name: bookname,
 		author: author,
+        createdAt: serverTimestamp()
 	})
 	.then(() => {
 		console.log("Record Added");
 	})
 })
 
-
+    //delete
     const deleteBook=document.querySelector('.delete')
     deleteBook.addEventListener('click', (e) => {
         let bookId = "4s1FBauePjreD0wghXal";
@@ -72,4 +74,49 @@ onSnapshot(colRef, (snapshot) => {
         })
     })
 
+
+    //get record using where
+    const whereRecord=document.querySelector('.whereRecord')
+    whereRecord.addEventListener('click', (e) => {
+
+        //querys
+        const q= query(colRef, where("id", "==", "Lawal"))
+
+          //real time collection data
+            onSnapshot(q, (snapshot) => {
+                let books=[];
+                snapshot.docs.forEach((doc) => {
+                    books.push({...doc.data(), id: doc.id})
+                })
+                console.log(books)
+            })
+    })
+
+
+    //order by 
+    const orderby =document.querySelector('.orderby')
+    orderby.addEventListener('click', (e) => {
+
+        //querys
+        const q= query(colRef, orderBy('createdAt','desc'))
+
+          //real time collection data
+            onSnapshot(q, (snapshot) => {
+                let books=[];
+                snapshot.docs.forEach((doc) => {
+                    books.push({...doc.data(), id: doc.id})
+                })
+                console.log(books)
+            })
+    })
  
+    //get single record
+    const getSingle= document.querySelector('.getSingle')
+    getSingle.addEventListener('click', (e) => {
+        const docRef = doc(db, 'books', 'pAOXJQvruywnmGp9HaEt')
+        getDoc(docRef)
+        .then((doc) => {
+            console.log(doc.data(), doc.id)
+        })
+
+    })
