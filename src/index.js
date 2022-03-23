@@ -1,6 +1,6 @@
 import {initializeApp} from 'firebase/app'
 import {
-    getFirestore,collection,getDocs
+    getFirestore,collection,getDocs,addDoc
 }from 'firebase/firestore'
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -36,3 +36,18 @@ const firebaseConfig = {
       console.log(err)
   })
 
+  //adding to the collection //addDoc
+  const addBookForm=document.querySelector('.add')
+    addBookForm.addEventListener('click', (e) => {
+	let bookname = "New book title";
+    let author = "Lawal";
+	addDoc(colRef, {
+		book_name: bookname,
+		author: author,
+	})
+	.then(() => {
+		console.log("Record Added");
+	})
+})
+
+ 
