@@ -1,6 +1,6 @@
 import {initializeApp} from 'firebase/app'
 import {
-    getFirestore,collection,getDocs,addDoc
+    getFirestore,collection,getDocs,addDoc,deleteDoc,doc
 }from 'firebase/firestore'
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -49,5 +49,16 @@ const firebaseConfig = {
 		console.log("Record Added");
 	})
 })
+
+
+    const deleteBook=document.querySelector('.delete')
+    deleteBook.addEventListener('click', (e) => {
+        let bookId = "4s1FBauePjreD0wghXal";
+        const docRef= doc(db, 'books', bookId)
+        deleteDoc(docRef)
+        .then(() => {
+            console.log("Deleted");
+        })
+    })
 
  
