@@ -114,8 +114,14 @@ onSnapshot(colRef, (snapshot) => {
     const getSingle= document.querySelector('.getSingle')
     getSingle.addEventListener('click', (e) => {
         const docRef = doc(db, 'books', 'pAOXJQvruywnmGp9HaEt')
-        getDoc(docRef)
-        .then((doc) => {
+       
+        // getDoc(docRef)
+        // .then((doc) => {
+        //     console.log(doc.data(), doc.id)
+        // })
+
+        //real time
+        onSnapshot(docRef, (doc) => {
             console.log(doc.data(), doc.id)
         })
 
