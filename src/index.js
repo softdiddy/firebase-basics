@@ -4,6 +4,10 @@ import {
     orderBy,serverTimestamp,getDoc,updateDoc
 }from 'firebase/firestore'
 
+import {
+	getAuth,createUserWithEmailAndPassword,signOut,signInWithEmailAndPassword,onAuthStateChanged
+}from 'firebase/auth'
+
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
     apiKey: "AIzaSyDd7FIkCcjhF2AOpMso1mI-fe__JowxgoM",
@@ -20,6 +24,7 @@ const firebaseConfig = {
 
   //init services
   const db=getFirestore()
+  const auth=getAuth()
 
   //collection ref
   const colRef=collection(db,'books')
@@ -39,7 +44,7 @@ const firebaseConfig = {
 
 
   //real time collection data
-onSnapshot(colRef, (snapshot) => {
+const unsubReal=onSnapshot(colRef, (snapshot) => {
     let books=[];
     snapshot.docs.forEach((doc) => {
         books.push({...doc.data(), id: doc.id})
@@ -121,12 +126,13 @@ onSnapshot(colRef, (snapshot) => {
         // })
 
         //real time
-        onSnapshot(docRef, (doc) => {
+        const unsubGet=onSnapshot(docRef, (doc) => {
             console.log(doc.data(), doc.id)
         })
 
     })
 
+    //update record
     const updateRecord = document.querySelector('.updateRecord')
     updateRecord.addEventListener('click', (e) => {
         const docRef = doc(db, 'books', 'pAOXJQvruywnmGp9HaEt')
@@ -138,3 +144,56 @@ onSnapshot(colRef, (snapshot) => {
             console.log("clear Data");
         })
     })
+
+    //signup
+    const signUp = document.querySelector('.signUp')
+    signUp.addEventListener('click', (e) => {
+        let email="softdiddy@gmail.com"
+        let password="Tq123w"
+       createUserWithEmailAndPassword(auth, email, password)
+       .then((cred) => {
+           console.log('user created:', cred.user);
+       })
+       .catch((err) => {
+           console.log(err.message)
+       })
+    })
+
+     //Login
+     const login = document.querySelector('.login')
+     login.addEventListener('click', (e) => {
+        let email="softdiddy@gmail.com"
+        let password="Tq123w"
+        signInWithEmailAndPassword(auth, email, password)
+        .then((cred) => {
+            console.log('user Signed in:', cred.user);
+        })
+        .catch((err) => {
+            console.log(err.message)
+        })
+     })
+
+
+     const logout = document.querySelector('.logout')
+     logout.addEventListener('click', (e) => {
+        signOut(auth)
+        .then(() => {
+            console.log("User signed out")
+        })
+        .catch((err) => {
+            console.log(err.message)
+        })
+
+        unsubAuth()
+        unsubReal()
+        //unsubGet()
+     })
+
+     const unsubAuth=onAuthStateChanged(auth, (user) => {
+         if(user==null){
+            console.log("User has not login in");
+         }else{
+             console.log(user)
+         }
+     })
+
