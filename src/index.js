@@ -1,7 +1,7 @@
 import {initializeApp} from 'firebase/app'
 import {
     getFirestore,collection,getDocs,addDoc,deleteDoc,doc,onSnapshot,query,where,
-    orderBy,serverTimestamp,getDoc
+    orderBy,serverTimestamp,getDoc,updateDoc
 }from 'firebase/firestore'
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -111,7 +111,7 @@ onSnapshot(colRef, (snapshot) => {
     })
  
     //get single record
-    const getSingle= document.querySelector('.getSingle')
+    const getSingle = document.querySelector('.getSingle')
     getSingle.addEventListener('click', (e) => {
         const docRef = doc(db, 'books', 'pAOXJQvruywnmGp9HaEt')
        
@@ -125,4 +125,16 @@ onSnapshot(colRef, (snapshot) => {
             console.log(doc.data(), doc.id)
         })
 
+    })
+
+    const updateRecord = document.querySelector('.updateRecord')
+    updateRecord.addEventListener('click', (e) => {
+        const docRef = doc(db, 'books', 'pAOXJQvruywnmGp9HaEt')
+        updateDoc(docRef, {
+            book_name: 'Introduction to firebase',
+            author: 'Sadiya Umar'
+        })
+        .then( ()=> {
+            console.log("clear Data");
+        })
     })
